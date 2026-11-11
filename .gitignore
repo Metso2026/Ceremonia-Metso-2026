@@ -1,0 +1,40 @@
+# Datos de invitados y exportaciones: NUNCA al repositorio
+*.csv
+*.xlsx
+*.xls
+*.ods
+respuestas*
+Respuestas*
+
+# Secretos y entorno
+.env*
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Originales pesados (se conservan solo en local; la web usa assets/img/)
+assets/00-from-html/
+assets/01-brand/
+assets/02-gems-rocks/
+assets/03-ribbons-lines/
+assets/04-dividers/
+assets/05-frames/
+assets/06-icons/
+assets/07-buttons/
+assets/08-controls/
+assets/09-effects/
+assets/10-swatches/
+originales/
+*.pdf
+*.zip
+Metso_Logo_2023.svg
+Noche de Gala Metsonites*.html
+prompt-claude-code-metso.md
+
+# Configuración local de Claude Code (CLAUDE.md sí se sube)
+.claude/
+
+# Original de la roca lateral (la web usa assets/img/rock-side-*)
+Imagen extra.png
