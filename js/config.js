@@ -13,10 +13,6 @@ const CONFIG = Object.freeze({
   // Hora de recepción (hora de Lima). La cuenta regresiva apunta aquí.
   fechaEvento: "2026-12-01T18:30:00-05:00",
 
-  // Último momento para confirmar asistencia (hora de Lima).
-  // Debe coincidir con FECHA_LIMITE en apps-script/Code.gs (ver GUIA_GOOGLE_SHEETS.md).
-  fechaLimiteFormulario: "2026-11-26T23:59:59-05:00",
-
   // Textos de la portada.
   titulo: "Noche de Gala",
   subtitulo: "Ceremonia de Años de Servicio",

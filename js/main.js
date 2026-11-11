@@ -11,7 +11,6 @@
 
   var TZ = "America/Lima";
   var EVENT = new Date(CONFIG.fechaEvento).getTime();
-  var DEADLINE = new Date(CONFIG.fechaLimiteFormulario).getTime();
   var $ = function (sel) { return document.querySelector(sel); };
 
   /* ---------- Textos desde config.js ---------- */
@@ -35,15 +34,13 @@
   }
   function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
   var ev = parts(EVENT, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-  var dl = parts(DEADLINE, { weekday: "long", day: "numeric", month: "long" });
   var hora = new Intl.DateTimeFormat("es-PE", { timeZone: TZ, hour: "numeric", minute: "2-digit", hour12: true })
     .format(new Date(EVENT)).replace(/\s+/g, " ");
-  var limite = dl.weekday + " " + dl.day + " de " + dl.month;
   var fmt = {
     fecha: cap(ev.weekday) + " " + ev.day + " de " + ev.month + " de " + ev.year,
-    hora: hora,
-    limite: limite,
-    cerrado: "El plazo de confirmación cerró el " + limite + "."
+    dia: cap(ev.weekday) + " " + ev.day + " de " + ev.month,
+    anio: ev.year,
+    hora: hora
   };
   document.querySelectorAll("[data-fmt]").forEach(function (el) {
     el.textContent = fmt[el.getAttribute("data-fmt")];
@@ -123,23 +120,16 @@
 
   /* ---------- Formulario de confirmación ---------- */
   var form = $("#rsvp");
-  var closed = $("#rsvp-closed");
   var done = $("#rsvp-done");
   var status = $("#form-status");
   var submit = $("#submit");
   var ifAttend = $("#if-attend");
   var ifAllergy = $("#if-allergy");
 
-  function closeForm() {
-    form.hidden = true;
-    closed.hidden = false;
-  }
-  if (Date.now() > DEADLINE) closeForm();
-
   // Muestra/oculta un bloque y desactiva sus campos para que no se validen ni envíen.
   function toggle(block, show) {
     block.hidden = !show;
-    block.querySelectorAll("input, textarea").forEach(function (el) { el.disabled = !show; });
+    block.querySelectorAll("input, select, textarea").forEach(function (el) { el.disabled = !show; });
   }
   function value(name) {
     var el = form.querySelector('[name="' + name + '"]:checked');
@@ -158,13 +148,8 @@
   var NAME_RE = /^[\p{L}\p{M}' ’-]+$/u;
   var FORMULA_RE = /^[=+\-@]/;
 
-  // Si el distrito escrito coincide con uno de la lista (sin importar tildes ni mayúsculas), se guarda tal como figura en ella.
-  function plain(s) { return s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase(); }
-  var DISTRICTS = Array.prototype.map.call($("#distritos").options, function (o) { return o.value; });
-  function district(s) {
-    s = s.replace(/\s+/g, " ").trim();
-    return DISTRICTS.find(function (x) { return plain(x) === plain(s); }) || s;
-  }
+  // Distritos válidos = opciones del <select> en index.html (también listados en DISTRITOS de Code.gs).
+  var DISTRICTS = Array.prototype.map.call(form.distrito.options, function (o) { return o.value; }).filter(Boolean);
 
   function setError(key, msg) {
     var err = $("#" + key + "-err");
@@ -182,7 +167,7 @@
       nombre: form.nombre.value.replace(/\s+/g, " ").trim(),
       asistencia: value("asistencia"),
       celular: form.celular.value.replace(/[\s-]/g, ""),
-      distrito: district(form.distrito.value),
+      distrito: form.distrito.value,
       vehiculo: value("vehiculo"),
       alergia: value("alergia"),
       alergiaDetalle: form.alergiaDetalle.value.trim(),
@@ -202,9 +187,7 @@
       // Celular peruano: 9 dígitos que empiezan con 9 (se envía sin el +51 para que Excel no lo lea como fórmula).
       if (!d.celular) errors.celular = "Indica tu número de celular.";
       else if (!/^9\d{8}$/.test(d.celular)) errors.celular = "Debe tener 9 dígitos y empezar con 9.";
-      if (!d.distrito) errors.distrito = "Indica tu distrito de residencia.";
-      else if (d.distrito.length < 2 || d.distrito.length > 60) errors.distrito = "Debe tener entre 2 y 60 caracteres.";
-      else if (!NAME_RE.test(d.distrito) || !/\p{L}/u.test(d.distrito)) errors.distrito = "Usa solo letras, espacios, apóstrofo (') o guion (-).";
+      if (DISTRICTS.indexOf(d.distrito) === -1) errors.distrito = "Selecciona tu distrito de residencia.";
       if (d.vehiculo !== "Sí" && d.vehiculo !== "No") errors.vehiculo = "Indica si vendrás con vehículo propio.";
       if (d.alergia !== "Sí" && d.alergia !== "No") errors.alergia = "Indica si tienes alguna alergia alimentaria.";
       if (d.alergia === "Sí") {
@@ -249,7 +232,6 @@
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     if (sending) return;
-    if (Date.now() > DEADLINE) { closeForm(); return; }
 
     status.textContent = "";
     status.classList.remove("is-error");
@@ -279,7 +261,6 @@
         done.focus();
         return;
       }
-      if (res && res.error === "plazo_cerrado") { closeForm(); return; }
       throw new Error((res && res.error) || "respuesta_invalida");
     }).catch(function (err) {
       console.error("[Invitación] Error al enviar:", err);

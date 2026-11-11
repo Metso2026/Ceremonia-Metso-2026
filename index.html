@@ -21,9 +21,9 @@
 <meta property="og:image:alt" content="Ceremonia de Años de Servicio, 1 de diciembre de 2026">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/styles.css?v=1.6">
-<script src="js/config.js?v=1.6" defer></script>
-<script src="js/main.js?v=1.6" defer></script>
+<link rel="stylesheet" href="css/styles.css?v=1.8">
+<script src="js/config.js?v=1.8" defer></script>
+<script src="js/main.js?v=1.8" defer></script>
 </head>
 <body>
 <a class="skip" href="#contenido">Saltar al contenido</a>
@@ -78,7 +78,6 @@
       <p class="subtitle" data-cfg="subtitulo">Ceremonia de Años de Servicio</p>
       <p class="intro">Hay momentos que merecen una pausa para reconocerlos y disfrutarlos.</p>
       <p class="intro">Te invitamos a compartir una noche especial para celebrar las historias, experiencias y personas que han sido parte de nuestro camino.</p>
-      <a class="btn" href="#confirmar">Confirmar asistencia <span aria-hidden="true">&rarr;</span></a>
       <p class="eyebrow tagline">We Go Beyond</p>
       <p class="scroll-hint" aria-hidden="true">Desliza <span>&darr;</span></p>
     </div>
@@ -111,7 +110,8 @@
       <li>
         <span class="ic" aria-hidden="true"><svg><use href="#i-calendar"/></svg></span>
         <h3>Fecha</h3>
-        <p data-fmt="fecha">Martes 1 de diciembre de 2026</p>
+        <p class="fact-big" data-fmt="dia">Martes 1 de diciembre</p>
+        <p class="fact-note" data-fmt="anio">2026</p>
       </li>
       <li>
         <span class="ic" aria-hidden="true"><svg><use href="#i-clock"/></svg></span>
@@ -122,7 +122,8 @@
       <li>
         <span class="ic" aria-hidden="true"><svg><use href="#i-location"/></svg></span>
         <h3>Lugar</h3>
-        <p><span data-cfg="lugar.nombre">Restaurante La Rosa Náutica</span><br><span data-cfg="lugar.direccion">Circuito de Playas, Miraflores 15074</span></p>
+        <p class="fact-big">Lima, Perú</p>
+        <p class="fact-note"><span data-cfg="lugar.nombre">Restaurante La Rosa Náutica</span><br><span data-cfg="lugar.direccion">Circuito de Playas, Miraflores 15074</span></p>
       </li>
     </ul>
     <a id="maps-link" class="btn btn-fill" href="https://maps.app.goo.gl/eHSjA9HLxhH4Ji5S8" target="_blank" rel="noopener noreferrer">
@@ -178,8 +179,6 @@
     <picture class="deco deco-r" aria-hidden="true"><source type="image/webp" srcset="assets/img/gem-rock-a.webp"><img src="assets/img/gem-rock-a.png" width="148" height="172" alt="" loading="lazy"></picture>
     <p class="eyebrow">Tu presencia nos importa</p>
     <h2 id="t-confirmar" class="gold">Confirma tu asistencia</h2>
-    <p class="lead">Por favor responde hasta el <strong data-fmt="limite">jueves 26 de noviembre</strong>.</p>
-
     <form id="rsvp" class="form" novalidate>
       <!-- Campo trampa para bots: las personas no lo ven ni lo llenan -->
       <div class="hp" aria-hidden="true">
@@ -215,62 +214,68 @@
 
         <div class="field">
           <label for="distrito">Distrito de residencia</label>
-          <input id="distrito" name="distrito" type="text" list="distritos" autocomplete="off" maxlength="60" aria-describedby="distrito-note distrito-err">
-          <!-- Sugerencias: 43 distritos de Lima, 7 del Callao y Arequipa. Se puede escribir otro. -->
-          <datalist id="distritos">
-            <option value="Ancón"></option>
-            <option value="Ate"></option>
-            <option value="Barranco"></option>
-            <option value="Breña"></option>
-            <option value="Carabayllo"></option>
-            <option value="Cercado de Lima"></option>
-            <option value="Chaclacayo"></option>
-            <option value="Chorrillos"></option>
-            <option value="Cieneguilla"></option>
-            <option value="Comas"></option>
-            <option value="El Agustino"></option>
-            <option value="Independencia"></option>
-            <option value="Jesús María"></option>
-            <option value="La Molina"></option>
-            <option value="La Victoria"></option>
-            <option value="Lince"></option>
-            <option value="Los Olivos"></option>
-            <option value="Lurigancho-Chosica"></option>
-            <option value="Lurín"></option>
-            <option value="Magdalena del Mar"></option>
-            <option value="Miraflores"></option>
-            <option value="Pachacámac"></option>
-            <option value="Pucusana"></option>
-            <option value="Pueblo Libre"></option>
-            <option value="Puente Piedra"></option>
-            <option value="Punta Hermosa"></option>
-            <option value="Punta Negra"></option>
-            <option value="Rímac"></option>
-            <option value="San Bartolo"></option>
-            <option value="San Borja"></option>
-            <option value="San Isidro"></option>
-            <option value="San Juan de Lurigancho"></option>
-            <option value="San Juan de Miraflores"></option>
-            <option value="San Luis"></option>
-            <option value="San Martín de Porres"></option>
-            <option value="San Miguel"></option>
-            <option value="Santa Anita"></option>
-            <option value="Santa María del Mar"></option>
-            <option value="Santa Rosa"></option>
-            <option value="Santiago de Surco"></option>
-            <option value="Surquillo"></option>
-            <option value="Villa El Salvador"></option>
-            <option value="Villa María del Triunfo"></option>
-            <option value="Bellavista"></option>
-            <option value="Callao"></option>
-            <option value="Carmen de la Legua Reynoso"></option>
-            <option value="La Perla"></option>
-            <option value="La Punta"></option>
-            <option value="Mi Perú"></option>
-            <option value="Ventanilla"></option>
-            <option value="Arequipa"></option>
-          </datalist>
-          <p id="distrito-note" class="note">Escribe tu distrito o elígelo de la lista.</p>
+          <div class="select">
+            <select id="distrito" name="distrito" aria-describedby="distrito-err">
+              <option value="" selected disabled hidden>Selecciona una opción</option>
+              <optgroup label="Lima">
+                <option>Ancón</option>
+                <option>Ate</option>
+                <option>Barranco</option>
+                <option>Breña</option>
+                <option>Carabayllo</option>
+                <option>Cercado de Lima</option>
+                <option>Chaclacayo</option>
+                <option>Chorrillos</option>
+                <option>Cieneguilla</option>
+                <option>Comas</option>
+                <option>El Agustino</option>
+                <option>Independencia</option>
+                <option>Jesús María</option>
+                <option>La Molina</option>
+                <option>La Victoria</option>
+                <option>Lince</option>
+                <option>Los Olivos</option>
+                <option>Lurigancho-Chosica</option>
+                <option>Lurín</option>
+                <option>Magdalena del Mar</option>
+                <option>Miraflores</option>
+                <option>Pachacámac</option>
+                <option>Pucusana</option>
+                <option>Pueblo Libre</option>
+                <option>Puente Piedra</option>
+                <option>Punta Hermosa</option>
+                <option>Punta Negra</option>
+                <option>Rímac</option>
+                <option>San Bartolo</option>
+                <option>San Borja</option>
+                <option>San Isidro</option>
+                <option>San Juan de Lurigancho</option>
+                <option>San Juan de Miraflores</option>
+                <option>San Luis</option>
+                <option>San Martín de Porres</option>
+                <option>San Miguel</option>
+                <option>Santa Anita</option>
+                <option>Santa María del Mar</option>
+                <option>Santa Rosa</option>
+                <option>Santiago de Surco</option>
+                <option>Surquillo</option>
+                <option>Villa El Salvador</option>
+                <option>Villa María del Triunfo</option>
+              </optgroup>
+              <optgroup label="Callao">
+                <option>Bellavista</option>
+                <option>Callao</option>
+                <option>Carmen de la Legua Reynoso</option>
+                <option>La Perla</option>
+                <option>La Punta</option>
+                <option>Mi Perú</option>
+                <option>Ventanilla</option>
+              </optgroup>
+              <optgroup label="Fuera de Lima">
+                <option>Arequipa</option>
+              </optgroup>
+            </select>
+          </div>
           <p id="distrito-err" class="err" hidden></p>
         </div>
 
@@ -281,7 +286,7 @@
             <label class="choice"><input type="radio" name="vehiculo" value="No"> No</label>
           </div>
           <p id="vehiculo-err" class="err" hidden></p>
-          <p id="vehiculo-note" class="note" role="status" hidden><svg aria-hidden="true"><use href="#i-glass"/></svg> Si vas a conducir, te recomendamos no ingerir bebidas alcohólicas. Tendremos una alternativa sin alcohol para acompañar la celebración.</p>
+          <p id="vehiculo-note" class="note" role="status" hidden><svg aria-hidden="true"><use href="#i-glass"/></svg> Si vas a conducir, no debes ingerir bebidas alcohólicas. Tendremos una alternativa sin alcohol para acompañar la celebración.</p>
         </fieldset>
 
         <fieldset class="field" id="g-alergia" aria-describedby="alergia-note alergia-err">
@@ -322,11 +327,6 @@
           Unirme al grupo de WhatsApp <svg class="btn-ic" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (se abre en una pestaña nueva)</span>
         </a>
       </div>
-    </div>
-
-    <div id="rsvp-closed" class="message" hidden>
-      <span class="ic" aria-hidden="true"><svg><use href="#i-mail"/></svg></span>
-      <p data-fmt="cerrado">El plazo de confirmación cerró el jueves 26 de noviembre.</p>
     </div>
 
     <p class="help"><svg aria-hidden="true"><use href="#i-phone"/></svg>

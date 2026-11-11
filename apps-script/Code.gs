@@ -11,8 +11,6 @@
  * Responde siempre JSON: { ok: true } o { ok: false, error: "<código>" }.
  */
 
-// Debe coincidir con fechaLimiteFormulario en js/config.js (hora de Lima).
-var FECHA_LIMITE = new Date('2026-11-26T23:59:59-05:00');
 var ZONA = 'America/Lima';
 var HOJA = 'Respuestas';
 var COLUMNAS = [
@@ -32,6 +30,60 @@ var NOMBRE_RE = /^[\p{L}\p{M}' ’-]+$/u;
 var LETRA_RE = /\p{L}/u;
 var CELULAR_RE = /^9\d{8}$/;
 var SI_NO = ['Sí', 'No'];
+// Las mismas opciones del <select id="distrito"> de index.html.
+var DISTRITOS = [
+  'Ancón',
+  'Ate',
+  'Barranco',
+  'Breña',
+  'Carabayllo',
+  'Cercado de Lima',
+  'Chaclacayo',
+  'Chorrillos',
+  'Cieneguilla',
+  'Comas',
+  'El Agustino',
+  'Independencia',
+  'Jesús María',
+  'La Molina',
+  'La Victoria',
+  'Lince',
+  'Los Olivos',
+  'Lurigancho-Chosica',
+  'Lurín',
+  'Magdalena del Mar',
+  'Miraflores',
+  'Pachacámac',
+  'Pucusana',
+  'Pueblo Libre',
+  'Puente Piedra',
+  'Punta Hermosa',
+  'Punta Negra',
+  'Rímac',
+  'San Bartolo',
+  'San Borja',
+  'San Isidro',
+  'San Juan de Lurigancho',
+  'San Juan de Miraflores',
+  'San Luis',
+  'San Martín de Porres',
+  'San Miguel',
+  'Santa Anita',
+  'Santa María del Mar',
+  'Santa Rosa',
+  'Santiago de Surco',
+  'Surquillo',
+  'Villa El Salvador',
+  'Villa María del Triunfo',
+  'Bellavista',
+  'Callao',
+  'Carmen de la Legua Reynoso',
+  'La Perla',
+  'La Punta',
+  'Mi Perú',
+  'Ventanilla',
+  'Arequipa'
+];
 
 function doPost(e) {
   try {
@@ -39,8 +91,6 @@ function doPost(e) {
 
     // Campo trampa: si viene lleno es un bot. Respondemos "ok" sin guardar nada.
     if (p.website) return responder({ ok: true });
-
-    if (new Date() > FECHA_LIMITE) return responder({ ok: false, error: 'plazo_cerrado' });
 
     var d = validar(p);
     if (!d) return responder({ ok: false, error: 'datos_invalidos' });
@@ -98,7 +148,7 @@ function validar(p) {
     return d;
   }
   if (!CELULAR_RE.test(d.celular)) return null;
-  if (!esNombre(d.distrito, 2, 60)) return null;
+  if (DISTRITOS.indexOf(d.distrito) === -1) return null;
   if (SI_NO.indexOf(d.vehiculo) === -1) return null;
   if (SI_NO.indexOf(d.alergia) === -1) return null;
   if (d.alergia === 'Sí') {
