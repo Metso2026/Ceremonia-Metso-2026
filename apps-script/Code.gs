@@ -34,6 +34,7 @@ var CELULARES = {
   '55': /^[1-9]{2}9\d{8}$/, // Brasil
   '56': /^9\d{8}$/, // Chile
   '34': /^[67]\d{8}$/, // España
+  '1': /^[2-9]\d{9}$/, // Estados Unidos
 };
 var SI_NO = ['Sí', 'No'];
 // Las mismas opciones del <select id="distrito"> de index.html.
