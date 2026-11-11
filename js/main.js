@@ -131,6 +131,8 @@
     block.hidden = !show;
     block.querySelectorAll("input, select, textarea").forEach(function (el) { el.disabled = !show; });
   }
+  // Opción elegida en el código de país: trae la regla del número (data-re) y un ejemplo (data-ph).
+  function country() { return form.prefijo.selectedOptions[0] || form.prefijo.options[0]; }
   function value(name) {
     var el = form.querySelector('[name="' + name + '"]:checked');
     return el ? el.value : "";
@@ -140,6 +142,7 @@
     toggle(ifAttend, attends);
     toggle(ifAllergy, attends && value("alergia") === "Sí");
     $("#vehiculo-note").hidden = !(attends && value("vehiculo") === "Sí");
+    form.celular.placeholder = country().dataset.ph;
   }
   form.addEventListener("change", sync);
   sync();
@@ -166,7 +169,8 @@
     return {
       nombre: form.nombre.value.replace(/\s+/g, " ").trim(),
       asistencia: value("asistencia"),
-      celular: form.celular.value.replace(/[\s-]/g, ""),
+      prefijo: form.prefijo.value,
+      celular: form.celular.value.replace(/[\s-]/g, "").replace(/^0/, ""),
       distrito: form.distrito.value,
       vehiculo: value("vehiculo"),
       alergia: value("alergia"),
@@ -184,9 +188,10 @@
 
     if (d.asistencia !== "Sí" && d.asistencia !== "No") errors.asistencia = "Indica si asistirás al evento.";
     if (d.asistencia === "Sí") {
-      // Celular peruano: 9 dígitos que empiezan con 9 (se envía sin el +51 para que Excel no lo lea como fórmula).
+      // Celular: la regla depende del código de país (data-re). Se envía sin el código; el script arma "+51 987654321".
+      var c = country();
       if (!d.celular) errors.celular = "Indica tu número de celular.";
-      else if (!/^9\d{8}$/.test(d.celular)) errors.celular = "Debe tener 9 dígitos y empezar con 9.";
+      else if (!new RegExp(c.dataset.re).test(d.celular)) errors.celular = "Número no válido para " + c.textContent.replace(/\s+/g, " ").trim() + ". Ejemplo: " + c.dataset.ph + ".";
       if (DISTRICTS.indexOf(d.distrito) === -1) errors.distrito = "Selecciona tu distrito de residencia.";
       if (d.vehiculo !== "Sí" && d.vehiculo !== "No") errors.vehiculo = "Indica si vendrás con vehículo propio.";
       if (d.alergia !== "Sí" && d.alergia !== "No") errors.alergia = "Indica si tienes alguna alergia alimentaria.";
@@ -206,7 +211,7 @@
 
   function send(d) {
     // Campos que no aplican se envían vacíos.
-    if (d.asistencia !== "Sí") { d.celular = ""; d.distrito = ""; d.vehiculo = ""; d.alergia = ""; }
+    if (d.asistencia !== "Sí") { d.prefijo = ""; d.celular = ""; d.distrito = ""; d.vehiculo = ""; d.alergia = ""; }
     if (d.alergia !== "Sí") d.alergiaDetalle = "";
 
     if (!CONFIG.APPS_SCRIPT_URL) {
@@ -252,7 +257,6 @@
 
     send(d).then(function (res) {
       if (res && res.ok) {
-        $("#rsvp-group").hidden = d.asistencia !== "Sí";
         $("#rsvp-done-text").textContent = d.asistencia === "Sí"
           ? "Recibimos tu confirmación. ¡Nos vemos el " + fmt.fecha.toLowerCase() + "!"
           : "Gracias por avisarnos. Te extrañaremos en esta celebración.";

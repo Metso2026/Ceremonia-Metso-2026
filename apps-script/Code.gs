@@ -28,7 +28,13 @@ var COLUMNAS = [
 // Mismas reglas que js/main.js. Si cambias una, cámbiala en los dos lugares.
 var NOMBRE_RE = /^[\p{L}\p{M}' ’-]+$/u;
 var LETRA_RE = /\p{L}/u;
-var CELULAR_RE = /^9\d{8}$/;
+// Código de país → regla del número (sin el código). Las mismas que data-re en el <select id="prefijo"> de index.html.
+var CELULARES = {
+  '51': /^9\d{8}$/, // Perú
+  '55': /^[1-9]{2}9\d{8}$/, // Brasil
+  '56': /^9\d{8}$/, // Chile
+  '34': /^[67]\d{8}$/, // España
+};
 var SI_NO = ['Sí', 'No'];
 // Las mismas opciones del <select id="distrito"> de index.html.
 var DISTRITOS = [
@@ -132,6 +138,7 @@ function validar(p) {
   var d = {
     nombre: texto(p.nombre).replace(/\s+/g, ' ').trim(),
     asistencia: texto(p.asistencia),
+    prefijo: texto(p.prefijo) || '51',
     celular: texto(p.celular).replace(/[\s-]/g, ''),
     distrito: texto(p.distrito).replace(/\s+/g, ' ').trim(),
     vehiculo: texto(p.vehiculo),
@@ -147,7 +154,9 @@ function validar(p) {
     d.celular = ''; d.distrito = ''; d.vehiculo = ''; d.alergia = ''; d.alergiaDetalle = '';
     return d;
   }
-  if (!CELULAR_RE.test(d.celular)) return null;
+  var reglaCelular = CELULARES.hasOwnProperty(d.prefijo) && CELULARES[d.prefijo];
+  if (!reglaCelular || !reglaCelular.test(d.celular)) return null;
+  d.celular = '+' + d.prefijo + ' ' + d.celular;
   if (DISTRITOS.indexOf(d.distrito) === -1) return null;
   if (SI_NO.indexOf(d.vehiculo) === -1) return null;
   if (SI_NO.indexOf(d.alergia) === -1) return null;
@@ -212,7 +221,7 @@ function responder(obj) {
  */
 function probar() {
   var r = doPost({ parameter: {
-    nombre: 'Prueba Organizador', asistencia: 'Sí', celular: '987654321', distrito: 'Miraflores',
+    nombre: 'Prueba Organizador', asistencia: 'Sí', prefijo: '51', celular: '987654321', distrito: 'Miraflores',
     vehiculo: 'No', alergia: 'Sí', alergiaDetalle: '=maní (prueba de fórmula)', acepta: 'Sí', website: ''
   } });
   console.log(r.getContent());

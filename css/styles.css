@@ -331,10 +331,16 @@ select optgroup { background: var(--surface); color: var(--gold); font-style: it
   select option:hover, select option:focus-visible { background: rgba(235, 199, 137, .12); color: var(--gold-light); outline: none; }
   select option:checked { color: var(--gold-light); }
   select option::checkmark { color: var(--gold); }
+  #prefijo::picker(select) { min-width: 15rem; }
 }
-/* Celular: prefijo +51 fijo a la izquierda */
+/* Celular: código de país con bandera a la izquierda */
 .tel { display: flex; gap: .5rem; }
-.tel-cc { display: grid; place-items: center; padding: 0 .9rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--gold-light); font-weight: 400; }
+.tel .select { flex: none; width: 8.25rem; }
+.tel input { min-width: 0; }
+.flag { display: inline-block; width: 1.5rem; height: 1rem; border-radius: 2px; box-shadow: 0 0 0 1px rgba(242, 217, 166, .25); flex: none; }
+#prefijo option, #prefijo selectedcontent { display: flex; align-items: center; gap: .6rem; }
+#prefijo .cc-code { min-width: 2.6rem; color: var(--gold-light); }
+#prefijo selectedcontent .cc-name { display: none; }
 
 input[type="radio"], input[type="checkbox"] {
   width: 1.25rem; height: 1.25rem; margin: 0; flex: none; accent-color: var(--gold-mid);
